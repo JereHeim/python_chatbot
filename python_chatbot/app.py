@@ -42,6 +42,15 @@ faq_keywords = {
 # Cache FAQ tokens once globally for similarity matching
 faq_tokens = {key: nlp(key) for key in faq_keywords.keys()}
 
+# Enhanced intent detection
+INTENTS = {
+    "ask_hint": ["hint", "give me a hint", "suggestion", "need help"],
+    "ask_solution": ["solution", "show answer", "what is the answer"],
+    "confused": ["I don't get it", "I'm stuck", "no idea", "confused"],
+    "ask_puzzle": ["give me a puzzle", "coding problem", "show a challenge"]
+}
+
+
 # Python puzzles with hints and solutions
 python_puzzles = [
     {
@@ -224,19 +233,30 @@ int main() {
 coding_trainings = [
     {
         "language": "Python",
-        "codeWithBlanks": "def {{blank0}}(x):\n    return x * {{blank1}}",
-        "blanks": ["multiply", "2"],
+        "codeWithBlanks": '''def multiply(x):
+    return x <input type="text" class="blank-input" data-answer="*"> <input type="text" class="blank-input" data-answer="2">''',
+        "correctAnswers": ['*', '2'],
         "hint": "The function multiplies x by a number.",
         "explanation": "This function named multiply returns x multiplied by 2."
     },
     {
         "language": "Python",
-        "codeWithBlanks": "for i in range({{blank0}}):\n    print(i)",
-        "blanks": ["5"],
+        "codeWithBlanks": '''for i in range(<input type="text" class="blank-input" data-answer="5">):
+    print(i)''',
+        "correctAnswers": ['5'],
         "hint": "Loops 5 times printing the numbers.",
         "explanation": "This loop prints numbers from 0 to 4."
+    },
+    {
+        "language": "Python",
+        "codeWithBlanks": '''print(<input type="text" class="blank-input" data-answer='"Hello, world"'>)''',
+        "correctAnswers": ['"Hello, world"'],
+        "hint": "What string do we want to display?",
+        "explanation": "You need to pass a string to `print()` using double quotes."
     }
 ]
+
+# Function to extract keywords from text using spaCy
 
 
 def extract_keywords(text):
@@ -249,7 +269,7 @@ def answer_question(question, threshold=0.7):
     question = question.lower().strip()
     question_keywords = extract_keywords(question)
     if not question_keywords:
-        return "Sorry, I couldn't understand your question. Try asking for a Python puzzle!"
+        return "Sorry, I couldn't understand your question." #Try asking for a Python puzzle!"
 
     best_match = None
     best_score = 0
@@ -265,7 +285,7 @@ def answer_question(question, threshold=0.7):
     if best_match:
         return faq_keywords[best_match]
     else:
-        return "Sorry, I don't have an answer for that. Try asking for a Python puzzle!"
+        return "Sorry, I don't have an answer for that." #Try asking for a Python puzzle!"
 
 def get_random_puzzle():
     puzzle = random.choice(python_puzzles)
@@ -280,7 +300,7 @@ def chat():
     user_message = request.json.get('message', '').strip()
 
     if user_message == "":
-        response = "Hi! Ask me about Python concepts like lists, functions, classes, loops, or ask for a Python puzzle!"
+        response = "Hi! Ask me about Python concepts like lists, functions, classes, loops." #or ask for a Python puzzle!"
     elif "puzzle" in user_message.lower():
         puzzle_index = random.randint(0, len(python_puzzles) - 1)
         session['last_puzzle_index'] = puzzle_index
@@ -312,3 +332,5 @@ if __name__ == '__main__':
     app.run(debug=True)
 # app.py - A simple Flask app for Python FAQs and puzzles
 # It uses spaCy for keyword extraction and provides a chat interface.
+# The app includes a training section with coding exercises and solutions.
+# It also supports hints and solutions for coding puzzles.
