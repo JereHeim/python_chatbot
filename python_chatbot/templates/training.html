@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coding Trainings</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    pre {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 5px;
+      font-size: 1rem;
+      white-space: pre-wrap;
+    }
+    .training-list {
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+  </style>
+</head>
+<body>
+<div class="container my-4">
+  <h1 class="mb-4">Coding Training Snippets</h1>
+  <div class="row">
+    <div class="col-md-4 training-list border-end">
+<ul class="list-group">
+  {% for training in trainings %}
+    <li class="list-group-item list-group-item-action"
+        role="button"
+        onclick="showTraining({{ loop.index0 }})"
+        id="training-item-{{ loop.index0 }}">
+      {{ training.language }} Example {{ loop.index }}
+    </li>
+  {% endfor %}
+</ul>
+
+    </div>
+    <div class="col-md-8">
+      <h3 id="training-language"></h3>
+      <pre id="training-code"></pre>
+      <button class="btn btn-primary me-2" onclick="toggleHint()">Show Hint</button>
+      <button class="btn btn-secondary" onclick="toggleExplanation()">Show Explanation</button>
+
+      <div class="mt-3">
+        <strong>Hint:</strong>
+        <p id="training-hint" style="display:none;"></p>
+      </div>
+      <div class="mt-3">
+        <strong>Explanation:</strong>
+        <p id="training-explanation" style="display:none;"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const trainings = {{ trainings | tojson }};
+  let currentIdx = null;
+
+  function showTraining(idx) {
+    currentIdx = idx;
+    const t = trainings[idx];
+    document.getElementById('training-language').textContent = t.language + " Example " + (idx + 1);
+    document.getElementById('training-code').textContent = t.code;
+    document.getElementById('training-hint').textContent = t.hint;
+    document.getElementById('training-explanation').textContent = t.explanation;
+
+    // Hide hint/explanation initially
+    document.getElementById('training-hint').style.display = 'none';
+    document.getElementById('training-explanation').style.display = 'none';
+
+    // Highlight selected item in list
+    trainings.forEach((_, i) => {
+      const el = document.getElementById('training-item-' + i);
+      if(i === idx) el.classList.add('active');
+      else el.classList.remove('active');
+    });
+  }
+
+  function toggleHint() {
+    const hint = document.getElementById('training-hint');
+    hint.style.display = (hint.style.display === 'none') ? 'block' : 'none';
+  }
+
+  function toggleExplanation() {
+    const exp = document.getElementById('training-explanation');
+    exp.style.display = (exp.style.display === 'none') ? 'block' : 'none';
+  }
+
+  // Show first training by default
+  if(trainings.length > 0){
+    showTraining(0);
+  }
+</script>
+</body>
+</html>

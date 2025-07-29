@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Python Chatbot</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
+        #chat-box { border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto; }
+        .message { margin-bottom: 10px; }
+        .user { color: blue; }
+        .bot { color: green; }
+        button { margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Python FAQ & Puzzle Chatbot</h1>
+    <div id="chat-box"></div>
+
+    <input type="text" id="input-message" placeholder="Ask me about Python or ask for a puzzle" size="50" />
+    <button id="send-btn">Send</button><br />
+    <button id="puzzle-btn">Get Puzzle</button>
+    <button id="hint-btn">Hint</button>
+    <button id="solution-btn">Solution</button>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const inputMessage = document.getElementById('input-message');
+        const sendBtn = document.getElementById('send-btn');
+        const puzzleBtn = document.getElementById('puzzle-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const solutionBtn = document.getElementById('solution-btn');
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = 'message ' + sender;
+            div.textContent = (sender === 'user' ? 'You: ' : 'Bot: ') + text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        async function sendMessage(msg) {
+            addMessage(msg, 'user');
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({message: msg})
+            });
+            const data = await response.json();
+            addMessage(data.response, 'bot');
+        }
+
+        async function getHint() {
+            const response = await fetch('/puzzle_hint', {method: 'POST'});
+            const data = await response.json();
+            addMessage(data.response, 'bot');
+        }
+
+        async function getSolution() {
+            const response = await fetch('/puzzle_solution', {method: 'POST'});
+            const data = await response.json();
+            addMessage(data.response, 'bot');
+        }
+
+        sendBtn.onclick = () => {
+            const msg = inputMessage.value.trim();
+            if(msg) {
+                sendMessage(msg);
+                inputMessage.value = '';
+            }
+        };
+
+        puzzleBtn.onclick = () => sendMessage("puzzle");
+        hintBtn.onclick = getHint;
+        solutionBtn.onclick = getSolution;
+
+        inputMessage.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") {
+                sendBtn.click();
+            }
+        });
+
+
+
+        // Initial welcome message
+        addMessage("Hi! Ask me about Python concepts like lists, functions, classes, loops, or ask for a Python puzzle!", "bot");
+    </script>
+    <a href="/training" class="btn btn-info mt-3" style="display:inline-block; margin-top: 15px;">Go to Coding Trainings</a>
+
+</body>
+</html>
