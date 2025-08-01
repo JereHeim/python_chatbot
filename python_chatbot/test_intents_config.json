@@ -1,0 +1,266 @@
+{
+  "intents": [
+    {
+      "name": "game_development",
+      "keywords": [
+        "game",
+        "gaming",
+        "pygame",
+        "arcade",
+        "graphics",
+        "sprite",
+        "animation"
+      ],
+      "patterns": [
+        ".*make.*game",
+        ".*create.*game",
+        ".*build.*game",
+        ".*game.*development"
+      ],
+      "response_method": "_get_game_development_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "gui_development",
+      "keywords": [
+        "gui",
+        "desktop",
+        "tkinter",
+        "pyqt",
+        "kivy",
+        "interface",
+        "window",
+        "button"
+      ],
+      "patterns": [
+        ".*desktop.*app",
+        ".*gui.*application",
+        ".*user.*interface"
+      ],
+      "response_method": "_get_gui_development_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "web_scraping",
+      "keywords": [
+        "scraping",
+        "scrape",
+        "beautifulsoup",
+        "selenium",
+        "requests",
+        "crawl",
+        "extract"
+      ],
+      "patterns": [
+        ".*web.*scrap",
+        ".*extract.*data",
+        ".*crawl.*website"
+      ],
+      "response_method": "_get_web_scraping_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "machine_learning",
+      "keywords": [
+        "machine learning",
+        "ai",
+        "tensorflow",
+        "pytorch",
+        "sklearn",
+        "model",
+        "neural",
+        "deep learning"
+      ],
+      "patterns": [
+        ".*machine.*learn",
+        ".*artificial.*intelligence",
+        ".*neural.*network"
+      ],
+      "response_method": "_get_ml_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "automation",
+      "keywords": [
+        "automation",
+        "automate",
+        "script",
+        "task",
+        "schedule",
+        "bot",
+        "workflow"
+      ],
+      "patterns": [
+        ".*automate.*task",
+        ".*schedule.*job",
+        ".*automation.*script"
+      ],
+      "response_method": "_get_automation_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "file_handling",
+      "keywords": [
+        "file",
+        "csv",
+        "json",
+        "excel",
+        "read",
+        "write",
+        "parse",
+        "save"
+      ],
+      "patterns": [
+        ".*read.*file",
+        ".*write.*file",
+        ".*file.*handling"
+      ],
+      "response_method": "_get_file_handling_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "database",
+      "keywords": [
+        "database",
+        "sql",
+        "sqlite",
+        "mysql",
+        "postgresql",
+        "query",
+        "table"
+      ],
+      "patterns": [
+        ".*database.*operation",
+        ".*sql.*query",
+        ".*store.*data"
+      ],
+      "response_method": "_get_database_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "web_development",
+      "keywords": [
+        "web",
+        "django",
+        "flask",
+        "fastapi",
+        "api",
+        "server",
+        "website"
+      ],
+      "patterns": [
+        ".*web.*development",
+        ".*build.*website",
+        ".*web.*app"
+      ],
+      "response_method": "_get_web_development_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "data_science",
+      "keywords": [
+        "data",
+        "pandas",
+        "numpy",
+        "analysis",
+        "science",
+        "visualization",
+        "matplotlib"
+      ],
+      "patterns": [
+        ".*data.*analysis",
+        ".*data.*science",
+        ".*analyze.*data"
+      ],
+      "response_method": "_get_data_science_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "coding_puzzle",
+      "keywords": [
+        "puzzle",
+        "challenge",
+        "problem",
+        "exercise",
+        "give me",
+        "show me"
+      ],
+      "patterns": [
+        ".*give.*puzzle",
+        ".*coding.*challenge",
+        ".*python.*problem"
+      ],
+      "response_method": "_get_python_puzzle",
+      "priority": 3,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "beginner_help",
+      "keywords": [
+        "start",
+        "begin",
+        "learn",
+        "new",
+        "basic",
+        "tutorial",
+        "beginner"
+      ],
+      "patterns": [
+        ".*how.*start",
+        ".*getting.*started",
+        ".*learn.*python"
+      ],
+      "response_method": "_get_beginner_python_help",
+      "priority": 1,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "syntax_help",
+      "keywords": [
+        "list",
+        "dict",
+        "string",
+        "loop",
+        "function",
+        "class",
+        "variable",
+        "syntax"
+      ],
+      "patterns": [
+        ".*how.*to.*",
+        ".*syntax.*",
+        ".*define.*"
+      ],
+      "response_method": "_get_syntax_help",
+      "priority": 1,
+      "required_confidence": 0.3
+    },
+    {
+      "name": "cybersecurity",
+      "keywords": [
+        "security",
+        "cybersecurity",
+        "encryption",
+        "hacking",
+        "vulnerability"
+      ],
+      "patterns": [
+        ".*cyber.*security",
+        ".*encrypt.*",
+        ".*secure.*"
+      ],
+      "response_method": "_get_cybersecurity_help",
+      "priority": 2,
+      "required_confidence": 0.3
+    }
+  ]
+}

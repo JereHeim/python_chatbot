@@ -1,132 +1,822 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Coding Trainings</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    /* Use div with pre-wrap instead of pre for better inline inputs */
-    #training-code {
-      background: #f8f9fa;
-      padding: 1rem;
-      border-radius: 5px;
-      font-size: 1rem;
-      white-space: pre-wrap;
-      font-family: monospace;
-      min-height: 150px;
-    }
-    .training-list {
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    input.blank-input {
-      width: 120px;
-      margin: 0 5px;
-      display: inline-block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Training Center</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #3776ab 0%, #ffd43b 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #3776ab 0%, #306998 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .content-area {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .difficulty-selector {
+            margin-bottom: 20px;
+        }
+
+        .difficulty-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .difficulty-btn:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .difficulty-btn.active {
+            background: #3776ab;
+            color: white;
+            border-color: #306998;
+        }
+
+        .difficulty-btn.beginner {
+            border-left: 5px solid #28a745;
+        }
+
+        .difficulty-btn.intermediate {
+            border-left: 5px solid #ffc107;
+        }
+
+        .difficulty-btn.advanced {
+            border-left: 5px solid #dc3545;
+        }
+
+        .progress-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .exercise-container {
+            display: none;
+        }
+
+        .exercise-container.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .exercise {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 5px solid #3776ab;
+        }
+
+        .exercise-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .exercise-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #3776ab;
+        }
+
+        .exercise-score {
+            background: #3776ab;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .blank {
+            display: inline-block;
+            min-width: 100px;
+            padding: 2px 8px;
+            background: #ffd43b;
+            color: #3776ab;
+            border: 2px solid #3776ab;
+            border-radius: 5px;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+
+        .blank input {
+            background: transparent;
+            border: none;
+            color: #3776ab;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            width: 100%;
+            text-align: center;
+            outline: none;
+        }
+
+        .blank.correct {
+            background: #28a745;
+            color: white;
+            border-color: #1e7e34;
+        }
+
+        .blank.incorrect {
+            background: #dc3545;
+            color: white;
+            border-color: #c82333;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .exercise-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3776ab;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #306998;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .hint-section {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .hint-section.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3776ab;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+
+        .completion-message {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container my-4">
-  <h1 class="mb-4">Coding Training Snippets</h1>
-  <div class="row">
-    <div class="col-md-4 training-list border-end">
-      <ul class="list-group">
-        {% for training in trainings %}
-          <li class="list-group-item list-group-item-action"
-              role="button"
-              onclick="showTraining({{ loop.index0 }})"
-              id="training-item-{{ loop.index0 }}">
-            {{ training.language }} Example {{ loop.index }}
-          </li>
-        {% endfor %}
-      </ul>
+    <div class="header">
+        <h1>🐍 Python Training Center</h1>
+        <p>Master Python with Interactive Fill-in-the-Blank Exercises</p>
+        <div class="nav-buttons">
+            <a href="/" class="nav-btn">💬 Chat Assistant</a>
+            <a href="/training" class="nav-btn">🏋️ Training Center</a>
+        </div>
     </div>
-    <div class="col-md-8">
-      <h3 id="training-language"></h3>
-      <div id="training-code"></div>
-      <button class="btn btn-primary me-2" onclick="toggleHint()">Show Hint</button>
-      <button class="btn btn-success mt-2 me-2" onclick="checkAnswers()">Check Answers</button>
-      <button class="btn btn-warning mt-2 me-2" onclick="resetInputs()">Reset Answers</button>
-      <button class="btn btn-secondary mt-2" onclick="toggleExplanation()">Show Explanation</button>
-      <a href="/" class="btn btn-outline-secondary mt-4">← Back to Chat</a>
 
+    <div class="main-container">
+        <div class="sidebar">
+            <h3>🎯 Difficulty Levels</h3>
+            <div class="difficulty-selector">
+                <button class="difficulty-btn beginner active" onclick="switchDifficulty('beginner')">
+                    🌱 Beginner
+                    <small>Basic syntax & concepts</small>
+                </button>
+                <button class="difficulty-btn intermediate" onclick="switchDifficulty('intermediate')">
+                    🚀 Intermediate
+                    <small>Functions & data structures</small>
+                </button>
+                <button class="difficulty-btn advanced" onclick="switchDifficulty('advanced')">
+                    🔥 Advanced
+                    <small>OOP & complex concepts</small>
+                </button>
+            </div>
 
-      <div class="mt-3">
-        <strong>Hint:</strong>
-        <p id="training-hint" style="display:none;"></p>
-      </div>
-      <div class="mt-3">
-        <strong>Explanation:</strong>
-        <p id="training-explanation" style="display:none;"></p>
-      </div>
+            <div class="progress-section">
+                <h4>📊 Your Progress</h4>
+                <div class="stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalScore">0</div>
+                        <div class="stat-label">Total Score</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="correctAnswers">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="currentStreak">0</div>
+                        <div class="stat-label">Streak</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p><span id="progressText">0% Complete</span></p>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <!-- Beginner Exercises -->
+            <div class="exercise-container beginner active" id="beginner-exercises">
+                <h2>🌱 Beginner Python Exercises</h2>
+                <p>Learn the fundamentals of Python programming with these basic exercises.</p>
+
+                <div class="exercise" data-exercise="0">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Variables and Data Types</div>
+                        <div class="exercise-score">10 points</div>
+                    </div>
+                    <p>Fill in the blanks to create variables with different data types:</p>
+                    <div class="code-block">
+# Create a string variable<br>
+<span class="blank"><input type="text" data-answer="name" placeholder="____"></span> = "Python"<br><br>
+# Create an integer variable<br>
+<span class="blank"><input type="text" data-answer="age" placeholder="____"></span> = 25<br><br>
+# Create a float variable<br>
+<span class="blank"><input type="text" data-answer="price" placeholder="____"></span> = 19.99<br><br>
+# Print the variables<br>
+<span class="blank"><input type="text" data-answer="print" placeholder="____"></span>(name, age, price)
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Variable names should be descriptive and use lowercase with underscores for multiple words.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(0)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(0)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(0)">Reset</button>
+                    </div>
+                </div>
+
+                <div class="exercise" data-exercise="1">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Lists and Indexing</div>
+                        <div class="exercise-score">15 points</div>
+                    </div>
+                    <p>Complete the code to work with Python lists:</p>
+                    <div class="code-block">
+# Create a list of fruits<br>
+fruits = [<span class="blank"><input type="text" data-answer='"apple"' placeholder='____'></span>, "banana", <span class="blank"><input type="text" data-answer='"cherry"' placeholder='____'></span>]<br><br>
+# Access the first element<br>
+first_fruit = fruits[<span class="blank"><input type="text" data-answer="0" placeholder="____"></span>]<br><br>
+# Add a new fruit to the list<br>
+fruits.<span class="blank"><input type="text" data-answer="append" placeholder="____"></span>("orange")<br><br>
+# Get the length of the list<br>
+list_length = <span class="blank"><input type="text" data-answer="len" placeholder="____"></span>(fruits)
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Lists use square brackets, indexing starts at 0, and append() adds items to the end.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(1)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(1)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(1)">Reset</button>
+                    </div>
+                </div>
+
+                <div class="exercise" data-exercise="2">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Basic If Statement</div>
+                        <div class="exercise-score">10 points</div>
+                    </div>
+                    <p>Complete the conditional statement:</p>
+                    <div class="code-block">
+age = 18<br><br>
+<span class="blank"><input type="text" data-answer="if" placeholder="____"></span> age >= 18:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("You are an adult")<br>
+<span class="blank"><input type="text" data-answer="else" placeholder="____"></span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("You are a minor")
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Python uses 'if' and 'else' keywords, and don't forget the colon (:) after conditions.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(2)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(2)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(2)">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intermediate Exercises -->
+            <div class="exercise-container intermediate" id="intermediate-exercises">
+                <h2>🚀 Intermediate Python Exercises</h2>
+                <p>Build on your Python knowledge with functions, loops, and data structures.</p>
+
+                <div class="exercise" data-exercise="3">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Function Definition</div>
+                        <div class="exercise-score">20 points</div>
+                    </div>
+                    <p>Create a function that calculates the area of a rectangle:</p>
+                    <div class="code-block">
+<span class="blank"><input type="text" data-answer="def" placeholder="____"></span> calculate_area(length, width):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;area = length <span class="blank"><input type="text" data-answer="*" placeholder="____"></span> width<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="blank"><input type="text" data-answer="return" placeholder="____"></span> area<br><br>
+# Call the function<br>
+result = <span class="blank"><input type="text" data-answer="calculate_area" placeholder="____"></span>(5, 3)<br>
+print(f"Area: {result}")
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Functions are defined with 'def', use 'return' to send back values, and call functions by name with arguments.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(3)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(3)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(3)">Reset</button>
+                    </div>
+                </div>
+
+                <div class="exercise" data-exercise="4">
+                    <div class="exercise-header">
+                        <div class="exercise-title">For Loop with Range</div>
+                        <div class="exercise-score">20 points</div>
+                    </div>
+                    <p>Complete the for loop to print numbers from 1 to 5:</p>
+                    <div class="code-block">
+<span class="blank"><input type="text" data-answer="for" placeholder="____"></span> i <span class="blank"><input type="text" data-answer="in" placeholder="____"></span> <span class="blank"><input type="text" data-answer="range" placeholder="____"></span>(1, 6):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(f"Number: {<span class="blank"><input type="text" data-answer="i" placeholder="____"></span>}")
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> For loops use 'for...in' syntax, and range(1, 6) generates numbers 1 through 5.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(4)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(4)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(4)">Reset</button>
+                    </div>
+                </div>
+
+                <div class="exercise" data-exercise="5">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Dictionary Operations</div>
+                        <div class="exercise-score">25 points</div>
+                    </div>
+                    <p>Work with Python dictionaries:</p>
+                    <div class="code-block">
+# Create a dictionary<br>
+student = {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="blank"><input type="text" data-answer='"name"' placeholder='____'></span>: "Alice",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"age": 20,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"grade": "A"<br>
+}<br><br>
+# Access a value<br>
+name = student[<span class="blank"><input type="text" data-answer='"name"' placeholder='____'></span>]<br><br>
+# Add a new key-value pair<br>
+student[<span class="blank"><input type="text" data-answer='"course"' placeholder='____'></span>] = "Python Programming"<br><br>
+# Get all keys<br>
+keys = student.<span class="blank"><input type="text" data-answer="keys" placeholder="____"></span>()
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Dictionaries use curly braces {}, keys are usually strings in quotes, and use square brackets to access values.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(5)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(5)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(5)">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Exercises -->
+            <div class="exercise-container advanced" id="advanced-exercises">
+                <h2>🔥 Advanced Python Exercises</h2>
+                <p>Challenge yourself with object-oriented programming and advanced concepts.</p>
+
+                <div class="exercise" data-exercise="6">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Class Definition</div>
+                        <div class="exercise-score">30 points</div>
+                    </div>
+                    <p>Create a simple class with methods:</p>
+                    <div class="code-block">
+<span class="blank"><input type="text" data-answer="class" placeholder="____"></span> Car:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="blank"><input type="text" data-answer="def" placeholder="____"></span> __init__(self, brand, model):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="blank"><input type="text" data-answer="self" placeholder="____"></span>.brand = brand<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.model = model<br><br>
+&nbsp;&nbsp;&nbsp;&nbsp;def display_info(self):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="blank"><input type="text" data-answer="return" placeholder="____"></span> f"{self.brand} {self.model}"<br><br>
+# Create an instance<br>
+my_car = <span class="blank"><input type="text" data-answer="Car" placeholder="____"></span>("Toyota", "Camry")
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Classes use 'class' keyword, __init__ is the constructor, and 'self' refers to the instance.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(6)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(6)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(6)">Reset</button>
+                    </div>
+                </div>
+
+                <div class="exercise" data-exercise="7">
+                    <div class="exercise-header">
+                        <div class="exercise-title">List Comprehension</div>
+                        <div class="exercise-score">25 points</div>
+                    </div>
+                    <p>Create a list comprehension to generate squares:</p>
+                    <div class="code-block">
+# Traditional way<br>
+squares = []<br>
+for x in range(10):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;squares.append(x**2)<br><br>
+# List comprehension way<br>
+squares = [<span class="blank"><input type="text" data-answer="x**2" placeholder="____"></span> <span class="blank"><input type="text" data-answer="for" placeholder="____"></span> x <span class="blank"><input type="text" data-answer="in" placeholder="____"></span> <span class="blank"><input type="text" data-answer="range" placeholder="____"></span>(10)]
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> List comprehensions follow the pattern [expression for item in iterable].
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(7)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(7)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(7)">Reset</button>
+                    </div>
+                </div>
+
+                <div class="exercise" data-exercise="8">
+                    <div class="exercise-header">
+                        <div class="exercise-title">Exception Handling</div>
+                        <div class="exercise-score">30 points</div>
+                    </div>
+                    <p>Handle exceptions properly:</p>
+                    <div class="code-block">
+<span class="blank"><input type="text" data-answer="try" placeholder="____"></span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;number = int(input("Enter a number: "))<br>
+&nbsp;&nbsp;&nbsp;&nbsp;result = 10 / number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(f"Result: {result}")<br>
+<span class="blank"><input type="text" data-answer="except" placeholder="____"></span> <span class="blank"><input type="text" data-answer="ValueError" placeholder="____"></span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Please enter a valid number")<br>
+except ZeroDivisionError:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Cannot divide by zero")<br>
+<span class="blank"><input type="text" data-answer="finally" placeholder="____"></span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print("Operation completed")
+                    </div>
+                    <div class="hint-section">
+                        <strong>💡 Hint:</strong> Use try/except for error handling, specific exception types like ValueError, and finally for cleanup.
+                    </div>
+                    <div class="exercise-controls">
+                        <button class="btn btn-primary" onclick="checkExercise(8)">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="showHint(8)">Show Hint</button>
+                        <button class="btn btn-secondary" onclick="resetExercise(8)">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="completion-message" id="completionMessage">
+                <h2>🎉 Congratulations!</h2>
+                <p>You've completed all exercises in this difficulty level!</p>
+                <button class="btn btn-success" onclick="nextLevel()">Try Next Level</button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-function checkAnswers() {
-  const inputs = document.querySelectorAll('#training-code input.blank-input');
-  inputs.forEach(input => {
-    const expected = input.dataset.answer?.trim() || '';
-    const actual = input.value.trim();
-    if (actual === expected) {
-      input.style.borderColor = 'green';
-      input.style.backgroundColor = '#d4edda';  // light green bg
-    } else {
-      input.style.borderColor = 'red';
-      input.style.backgroundColor = '#f8d7da';  // light red bg
-    }
-  });
-}
+    <script>
+        let currentDifficulty = 'beginner';
+        let totalScore = 0;
+        let correctAnswers = 0;
+        let currentStreak = 0;
+        let exerciseProgress = {
+            beginner: [false, false, false],
+            intermediate: [false, false, false],
+            advanced: [false, false, false]
+        };
 
-function resetInputs() {
-  const inputs = document.querySelectorAll('#training-code input.blank-input');
-  inputs.forEach(input => {
-    input.value = '';
-    input.style.borderColor = '';
-    input.style.backgroundColor = '';
-  });
-}
+        function switchDifficulty(difficulty) {
+            // Update active button
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.difficulty-btn.${difficulty}`).classList.add('active');
+            
+            // Hide all exercise containers
+            document.querySelectorAll('.exercise-container').forEach(container => container.classList.remove('active'));
+            
+            // Show selected difficulty container
+            document.getElementById(`${difficulty}-exercises`).classList.add('active');
+            
+            currentDifficulty = difficulty;
+            updateProgress();
+        }
 
-const trainings = {{ trainings | tojson }};
-let currentIdx = null;
+        function checkExercise(exerciseIndex) {
+            const exercise = document.querySelector(`[data-exercise="${exerciseIndex}"]`);
+            const inputs = exercise.querySelectorAll('input');
+            let allCorrect = true;
+            let points = 0;
 
-function showTraining(idx) {
-  currentIdx = idx;
-  const t = trainings[idx];
-  document.getElementById('training-language').textContent = t.language + " Example " + (idx + 1);
-  document.getElementById('training-code').innerHTML = t.codeWithBlanks;
-  document.getElementById('training-hint').textContent = t.hint;
-  document.getElementById('training-explanation').textContent = t.explanation;
+            inputs.forEach(input => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.dataset.answer.toLowerCase();
+                const blank = input.parentElement;
 
-  // Hide hint/explanation initially
-  document.getElementById('training-hint').style.display = 'none';
-  document.getElementById('training-explanation').style.display = 'none';
+                if (userAnswer === correctAnswer) {
+                    blank.classList.remove('incorrect');
+                    blank.classList.add('correct');
+                    points += 5;
+                } else {
+                    blank.classList.remove('correct');
+                    blank.classList.add('incorrect');
+                    allCorrect = false;
+                }
+            });
 
-  // Highlight selected item in list
-  trainings.forEach((_, i) => {
-    const el = document.getElementById('training-item-' + i);
-    if(i === idx) el.classList.add('active');
-    else el.classList.remove('active');
-  });
-}
+            if (allCorrect) {
+                const scoreElement = exercise.querySelector('.exercise-score');
+                const exercisePoints = parseInt(scoreElement.textContent);
+                totalScore += exercisePoints;
+                correctAnswers++;
+                currentStreak++;
+                
+                // Mark exercise as completed
+                const difficultyIndex = getDifficultyIndex(currentDifficulty);
+                const relativeIndex = exerciseIndex % 3;
+                exerciseProgress[currentDifficulty][relativeIndex] = true;
+                
+                // Show success message
+                showSuccessMessage(exercise, exercisePoints);
+                
+                // Check if all exercises in current difficulty are completed
+                checkLevelCompletion();
+            } else {
+                currentStreak = 0;
+            }
 
-function toggleHint() {
-  const hint = document.getElementById('training-hint');
-  hint.style.display = (hint.style.display === 'none') ? 'block' : 'none';
-}
+            updateStats();
+            updateProgress();
+        }
 
-function toggleExplanation() {
-  const exp = document.getElementById('training-explanation');
-  exp.style.display = (exp.style.display === 'none') ? 'block' : 'none';
-}
+        function getDifficultyIndex(difficulty) {
+            const difficulties = ['beginner', 'intermediate', 'advanced'];
+            return difficulties.indexOf(difficulty);
+        }
 
-// Show first training by default
-if(trainings.length > 0){
-  showTraining(0);
-}
-</script>
+        function showSuccessMessage(exercise, points) {
+            const message = document.createElement('div');
+            message.className = 'success-message';
+            message.style.cssText = `
+                background: #28a745;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 10px;
+                margin-top: 10px;
+                text-align: center;
+                animation: fadeIn 0.5s ease;
+            `;
+            message.innerHTML = `✅ Excellent! You earned ${points} points!`;
+            
+            exercise.appendChild(message);
+            
+            setTimeout(() => {
+                message.remove();
+            }, 3000);
+        }
+
+        function checkLevelCompletion() {
+            const currentProgress = exerciseProgress[currentDifficulty];
+            const allCompleted = currentProgress.every(completed => completed);
+            
+            if (allCompleted) {
+                document.getElementById('completionMessage').classList.add('show');
+            }
+        }
+
+        function nextLevel() {
+            const difficulties = ['beginner', 'intermediate', 'advanced'];
+            const currentIndex = difficulties.indexOf(currentDifficulty);
+            
+            if (currentIndex < difficulties.length - 1) {
+                const nextDifficulty = difficulties[currentIndex + 1];
+                switchDifficulty(nextDifficulty);
+                document.getElementById('completionMessage').classList.remove('show');
+            } else {
+                alert('🎉 Congratulations! You\'ve mastered all Python difficulty levels!');
+            }
+        }
+
+        function showHint(exerciseIndex) {
+            const exercise = document.querySelector(`[data-exercise="${exerciseIndex}"]`);
+            const hintSection = exercise.querySelector('.hint-section');
+            hintSection.classList.toggle('show');
+        }
+
+        function resetExercise(exerciseIndex) {
+            const exercise = document.querySelector(`[data-exercise="${exerciseIndex}"]`);
+            const inputs = exercise.querySelectorAll('input');
+            
+            inputs.forEach(input => {
+                input.value = '';
+                const blank = input.parentElement;
+                blank.classList.remove('correct', 'incorrect');
+            });
+            
+            const hintSection = exercise.querySelector('.hint-section');
+            hintSection.classList.remove('show');
+        }
+
+        function updateStats() {
+            document.getElementById('totalScore').textContent = totalScore;
+            document.getElementById('correctAnswers').textContent = correctAnswers;
+            document.getElementById('currentStreak').textContent = currentStreak;
+        }
+
+        function updateProgress() {
+            const totalExercises = Object.values(exerciseProgress).flat().length;
+            const completedExercises = Object.values(exerciseProgress).flat().filter(completed => completed).length;
+            const progressPercentage = Math.round((completedExercises / totalExercises) * 100);
+            
+            document.getElementById('progressFill').style.width = `${progressPercentage}%`;
+            document.getElementById('progressText').textContent = `${progressPercentage}% Complete`;
+        }
+
+        // Initialize the training center
+        updateStats();
+        updateProgress();
+    </script>
 </body>
 </html>

@@ -1,0 +1,124 @@
+{
+  "intents": [
+    {
+      "name": "game_development",
+      "keywords": ["game", "gaming", "pygame", "arcade", "graphics", "sprite", "animation", "collision", "2d", "3d"],
+      "patterns": [".*make.*game", ".*create.*game", ".*build.*game", ".*game.*development", ".*game.*engine"],
+      "response_method": "_get_game_development_help",
+      "priority": 3,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "gui_development",
+      "keywords": ["gui", "desktop", "tkinter", "pyqt", "kivy", "interface", "window", "button", "widget", "form"],
+      "patterns": [".*desktop.*app", ".*gui.*application", ".*user.*interface", ".*window.*app"],
+      "response_method": "_get_gui_development_help",
+      "priority": 3,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "web_scraping",
+      "keywords": ["scraping", "scrape", "beautifulsoup", "selenium", "requests", "crawl", "extract", "parse", "html"],
+      "patterns": [".*web.*scrap", ".*extract.*data", ".*crawl.*website", ".*parse.*html"],
+      "response_method": "_get_web_scraping_help",
+      "priority": 3,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "machine_learning",
+      "keywords": ["machine learning", "ai", "tensorflow", "pytorch", "sklearn", "model", "neural", "deep learning", "classification", "regression"],
+      "patterns": [".*machine.*learn", ".*artificial.*intelligence", ".*neural.*network", ".*train.*model"],
+      "response_method": "_get_ml_help",
+      "priority": 3,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "automation",
+      "keywords": ["automation", "automate", "script", "task", "schedule", "bot", "workflow", "cron", "batch"],
+      "patterns": [".*automate.*task", ".*schedule.*job", ".*automation.*script", ".*run.*automatically"],
+      "response_method": "_get_automation_help",
+      "priority": 3,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "file_handling",
+      "keywords": ["file", "csv", "json", "excel", "read", "write", "parse", "save", "io", "text"],
+      "patterns": [".*read.*file", ".*write.*file", ".*file.*handling", ".*process.*file"],
+      "response_method": "_get_file_handling_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "database",
+      "keywords": ["database", "sql", "sqlite", "mysql", "postgresql", "query", "table", "orm", "crud"],
+      "patterns": [".*database.*operation", ".*sql.*query", ".*store.*data", ".*database.*connection"],
+      "response_method": "_get_database_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "web_development",
+      "keywords": ["web", "django", "flask", "fastapi", "api", "server", "website", "http", "rest", "backend"],
+      "patterns": [".*web.*development", ".*build.*website", ".*web.*app", ".*web.*server"],
+      "response_method": "_get_web_development_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "data_science",
+      "keywords": ["data", "pandas", "numpy", "analysis", "science", "visualization", "matplotlib", "seaborn", "statistics"],
+      "patterns": [".*data.*analysis", ".*data.*science", ".*analyze.*data", ".*data.*visualization"],
+      "response_method": "_get_data_science_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "coding_puzzle",
+      "keywords": ["puzzle", "challenge", "problem", "exercise", "give me", "show me", "practice", "coding challenge"],
+      "patterns": [".*give.*puzzle", ".*coding.*challenge", ".*python.*problem", ".*practice.*problem"],
+      "response_method": "_get_python_puzzle",
+      "priority": 4,
+      "required_confidence": 0.2
+    },
+    {
+      "name": "beginner_help",
+      "keywords": ["start", "begin", "learn", "new", "basic", "tutorial", "beginner", "introduction", "getting started", "use python", "how do i use", "what is python", "python basics"],
+      "patterns": [".*how.*start", ".*getting.*started", ".*learn.*python", ".*python.*basics", ".*how.*do.*i.*use.*python", ".*what.*is.*python", ".*how.*use.*python"],
+      "response_method": "_get_beginner_python_help",
+      "priority": 1,
+      "required_confidence": 0.2
+    },
+    {
+      "name": "syntax_help",
+      "keywords": ["list", "dict", "string", "loop", "function", "class", "variable", "syntax", "how to"],
+      "patterns": [".*how.*to.*", ".*syntax.*", ".*define.*", ".*create.*"],
+      "response_method": "_get_syntax_help",
+      "priority": 1,
+      "required_confidence": 0.2
+    },
+    {
+      "name": "testing",
+      "keywords": ["test", "testing", "unittest", "pytest", "mock", "debug", "debugging"],
+      "patterns": [".*test.*code", ".*unit.*test", ".*debug.*", ".*testing.*framework"],
+      "response_method": "_get_testing_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "performance",
+      "keywords": ["performance", "optimize", "speed", "memory", "profiling", "benchmark", "efficiency"],
+      "patterns": [".*optimize.*code", ".*improve.*performance", ".*make.*faster", ".*memory.*usage"],
+      "response_method": "_get_performance_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    },
+    {
+      "name": "packages_libraries",
+      "keywords": ["package", "library", "module", "pip", "install", "import", "dependency"],
+      "patterns": [".*install.*package", ".*import.*module", ".*python.*library", ".*package.*manager"],
+      "response_method": "_get_packages_help",
+      "priority": 2,
+      "required_confidence": 0.25
+    }
+  ]
+}

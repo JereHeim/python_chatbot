@@ -2,25 +2,316 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Python Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Assistant Bot</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; padding: 20px; }
-        #chat-box { border: 1px solid #ddd; padding: 10px; height: 300px; overflow-y: auto; }
-        .message { margin-bottom: 10px; }
-        .user { color: blue; }
-        .bot { color: green; }
-        button { margin: 5px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            height: 700px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+        
+        .chat-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .chat-header .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            text-decoration: none;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+        
+        #chat-box {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            display: flex;
+            align-items: flex-start;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message.bot {
+            align-self: flex-start;
+        }
+        
+        .message-content {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 6px;
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border-bottom-left-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .message.bot .message-avatar {
+            background: #28a745;
+            color: white;
+        }
+        
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        #input-message {
+            flex: 1;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            padding: 12px 20px;
+            font-size: 14px;
+            outline: none;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        
+        #input-message:focus {
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #6c757d;
+            padding: 8px 16px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            background: #e9ecef;
+            color: #495057;
+            transform: translateY(-1px);
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Scrollbar styling */
+        #chat-box::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        #chat-box::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        #chat-box::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        
+        #chat-box::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .chat-container {
+                height: 100vh;
+                border-radius: 0;
+                max-width: 100%;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .input-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            #input-message {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Python FAQ & Puzzle Chatbot</h1>
-    <div id="chat-box"></div>
-
-    <input type="text" id="input-message" placeholder="Ask me about Python or ask for a puzzle" size="50" />
-    <button id="send-btn">Send</button><br />
-    <button id="puzzle-btn">Get Puzzle</button>
-    <button id="hint-btn">Hint</button>
-    <button id="solution-btn">Solution</button>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>🐍 Python Assistant Bot</h1>
+            <div class="subtitle">Hi! I'm your Python Assistant! Ask me anything about Python programming, libraries, frameworks, or coding concepts. I'll search the web for the latest Python information and provide helpful examples!</div>
+            <div class="nav-buttons">
+                <button class="nav-btn active">💬 Chat Assistant</button>
+                <a href="/training" class="nav-btn">🎯 Training Center</a>
+            </div>
+        </div>
+        
+        <div id="chat-box">
+            <!-- Messages will be added here -->
+        </div>
+        
+        <div class="input-container">
+            <div class="input-row">
+                <input type="text" id="input-message" placeholder="Ask me about Python..." />
+                <button id="send-btn" class="send-btn">Send</button>
+            </div>
+            <div class="action-buttons">
+                <button id="puzzle-btn" class="action-btn">🧩 Get Puzzle</button>
+                <button id="hint-btn" class="action-btn">💡 Hint</button>
+                <button id="solution-btn" class="action-btn">✅ Solution</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const chatBox = document.getElementById('chat-box');
@@ -31,34 +322,81 @@
         const solutionBtn = document.getElementById('solution-btn');
 
         function addMessage(text, sender) {
-            const div = document.createElement('div');
-            div.className = 'message ' + sender;
-            div.textContent = (sender === 'user' ? 'You: ' : 'Bot: ') + text;
-            chatBox.appendChild(div);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message ' + sender;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'user' ? 'You' : '🐍';
+            
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            
+            // Handle markdown-like formatting for bot messages
+            if (sender === 'bot') {
+                // Convert **text** to bold and preserve line breaks
+                let formattedText = text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/🔗 \*\*Visit:\*\* (.*?)$/gm, '🔗 <a href="$1" target="_blank" style="color: #667eea; text-decoration: none;">Visit Link</a>')
+                    .replace(/```python\n([\s\S]*?)\n```/g, '<pre style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin: 8px 0; overflow-x: auto; border-left: 3px solid #667eea;"><code>$1</code></pre>')
+                    .replace(/```([\s\S]*?)```/g, '<pre style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin: 8px 0; overflow-x: auto;"><code>$1</code></pre>');
+                    
+                content.innerHTML = formattedText;
+            } else {
+                content.textContent = text;
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(content);
+            chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         async function sendMessage(msg) {
+            if (!msg.trim()) return;
+            
             addMessage(msg, 'user');
-            const response = await fetch('/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({message: msg})
-            });
-            const data = await response.json();
-            addMessage(data.response, 'bot');
+            
+            // Show typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message bot typing';
+            typingDiv.innerHTML = '<div class="message-avatar">🐍</div><div class="message-content">Thinking...</div>';
+            chatBox.appendChild(typingDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({message: msg})
+                });
+                const data = await response.json();
+                
+                // Remove typing indicator
+                chatBox.removeChild(typingDiv);
+                
+                if (data.error) {
+                    addMessage('Sorry, there was an error processing your request. Please try again.', 'bot');
+                } else {
+                    addMessage(data.response, 'bot');
+                }
+            } catch (error) {
+                // Remove typing indicator
+                if (chatBox.contains(typingDiv)) {
+                    chatBox.removeChild(typingDiv);
+                }
+                addMessage('Sorry, I\'m having trouble connecting. Please check your internet connection and try again.', 'bot');
+            }
         }
 
         async function getHint() {
-            const response = await fetch('/puzzle_hint', {method: 'POST'});
-            const data = await response.json();
-            addMessage(data.response, 'bot');
+            addMessage('Can you give me a hint?', 'user');
+            addMessage('Try breaking down the problem into smaller parts. Think about what data structures or algorithms might be useful here.', 'bot');
         }
 
         async function getSolution() {
-            const response = await fetch('/puzzle_solution', {method: 'POST'});
-            const data = await response.json();
-            addMessage(data.response, 'bot');
+            addMessage('Can you show me the solution?', 'user');
+            addMessage('I\'d be happy to help! Can you tell me which specific problem you\'re working on? You can ask me to generate a puzzle first, then I can provide the solution.', 'bot');
         }
 
         sendBtn.onclick = () => {
@@ -69,7 +407,7 @@
             }
         };
 
-        puzzleBtn.onclick = () => sendMessage("puzzle");
+        puzzleBtn.onclick = () => sendMessage("Give me a Python puzzle");
         hintBtn.onclick = getHint;
         solutionBtn.onclick = getSolution;
 
@@ -79,12 +417,10 @@
             }
         });
 
-
-
         // Initial welcome message
-        addMessage("Hi! Ask me about Python concepts like lists, functions, classes, loops, or ask for a Python puzzle!", "bot");
+        setTimeout(() => {
+            addMessage("💡 **New!** Try our **🎯 Training Center** for interactive Python exercises!", "bot");
+        }, 500);
     </script>
-    <a href="/training" class="btn btn-info mt-3" style="display:inline-block; margin-top: 15px;">Go to Coding Trainings</a>
-
 </body>
 </html>
